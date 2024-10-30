@@ -3,11 +3,17 @@ package main
 import (
 	"log"
 	"net/http"
+	"strings"
 )
 
 func redirectFunc(w http.ResponseWriter, r *http.Request) {
+	hostSlice := strings.Split(r.Host, ":")
+	uriSlice := strings.Split(r.RequestURI, "/")
 
-	http.Redirect(w, r, r.Host+r.RequestURI, http.StatusMovedPermanently)
+	reqUri := strings.Join(uriSlice[:1], "/")
+	addr := "https://" + hostSlice[0] + reqUri
+
+	http.Redirect(w, r, addr, http.StatusMovedPermanently)
 }
 
 func tlsRedirect() {
